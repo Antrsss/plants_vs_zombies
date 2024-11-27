@@ -14,6 +14,7 @@ enum EntitiyIndex : int8_t {
     MediumZombie = 6,
     BigZombie = 7,
     Lawnmower = 8,
+    LawnmowerBase = 9
 };
 
 void init_entities(chtype*);

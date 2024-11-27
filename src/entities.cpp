@@ -17,4 +17,5 @@ void init_entities(chtype* entities) {
     entities[EntitiyIndex::MediumZombie] |= COLOR_PAIR(4);
     entities[EntitiyIndex::BigZombie] |= COLOR_PAIR(4);
     entities[EntitiyIndex::Lawnmower] |= COLOR_PAIR(5);
+    entities[EntitiyIndex::LawnmowerBase] |= COLOR_PAIR(5);
 }
