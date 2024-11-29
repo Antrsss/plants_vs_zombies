@@ -1,18 +1,13 @@
-.data
-playing_field: .asciz "~>!!.@.....~>&.?@.....~>.?*..&...=>&........~>!!.@....."
-
 #нулевой столбец - дошел ли зомби до газонокосилки или нет (~ - не дошел, = - дошел)
 
 .text
-.globl _start
+.globl step
 .EQU width, 11
 .EQU height, 5
 
 # %rdi - указатель на поле (массив размером 55 символов) 
-# playing field is strictly in rax DO NOT MOVE IT TO OTHER REGISTERS PLEASE I'M BEGGING
 
-_start:
-    # пропиши сам :D
+step:
 
 # procedure
 step:

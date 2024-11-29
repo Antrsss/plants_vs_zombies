@@ -7,14 +7,17 @@
 enum EntitiyIndex : int8_t {
     Empty = 0,
     Sunflower = 1,
-    Peashooter = 2,
-    Pea = 3,
-    Wallnut = 4,
-    SmallZombie = 5,
-    MediumZombie = 6,
-    BigZombie = 7,
-    Lawnmower = 8,
-    LawnmowerBase = 9
+    NotReadyPeashooter = 2,
+    ReadyPeashooter = 3,
+    Pea = 4,
+    Wallnut = 5,
+    DamagedWallnut = 6,
+    SmallZombie = 7,
+    MediumZombie = 8,
+    BigZombie = 9,
+    Lawnmower = 10,
+    ReadyLawnmowerBase = 11,
+    NotReadyLawnmowerBase = 12
 };
 
 void init_entities(chtype*);

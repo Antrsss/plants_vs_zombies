@@ -1,11 +1,6 @@
-.data
-playing_field: .asciz "0>!%.@..%..0>..?@.%%%.0>.?*..%...1>&........0>!!.@....."
+.globl update_suns 
 
-.text
-.globl _start
-
-_start:
-    #пропиши сам :D
+update_suns:
 
 generate_sun:
     movq $0, %rcx #счетчик клетки поля
