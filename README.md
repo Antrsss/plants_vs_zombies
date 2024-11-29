@@ -7,8 +7,9 @@ Rules are basicaly the same as base game. If zombies touch end of playing field 
 ### Plants
 Considering restrictions of assembly language and time restrictions the game features the following types of plants:
 - sunflower, denoted by '%'
-- peashooter, denoted by '}', and peas denoted by '*'
-- wallnut, denoted by '#'
+- peashooter (isn't loaded with pear), denoted by '?', peashooter (is loaded with pear), denoted by '!', and peas denoted by '*'
+- alive wallnut, denoted by '#', and half-alive wallnut, denoted by '|' 
+
 ### Zombies
 - small zombie, denoted by '&'
 - medium zombie, denoted by '$'
@@ -16,3 +17,5 @@ Considering restrictions of assembly language and time restrictions the game fea
 
 ### Lawn mowers 
 - denoted by '>'
+- if it was touched - symbol '='
+- if not - symbol '~'

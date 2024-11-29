@@ -7,7 +7,7 @@ extern "C" int step(char*);
 
 char* playing_field = new char[WIDTH * HEIGHT];
 chtype* entities =
-    new chtype[]{ '.', '%', '}', '*', '#', '&', '$', '@', '>', '=' };
+    new chtype[]{ '.', '%', '?', '*', '#', '&', '$', '@', '>', '=' };
 
 // 01 2 3 4 5 6 7 8 9 10
 // => . . . . . @ . . .
