@@ -18,7 +18,7 @@ CPP_SRC = $(SRC_DIR)/main.cpp
 HEADERS = $(SRC_DIR)/display.h $(SRC_DIR)/entities.h $(SRC_DIR)/config.h
 DISPLAY_SRC = $(SRC_DIR)/display.cpp
 ENTITIES_SRC = $(SRC_DIR)/entities.cpp
-OBJS = $(BUILD_DIR)/display.o $(BUILD_DIR)/entities.o $(BUILD_DIR)/main.o $(BUILD_DIR)/asm.o
+OBJS = $(BUILD_DIR)/display.o $(BUILD_DIR)/entities.o $(BUILD_DIR)/main.o $(BUILD_DIR)/step.o $(BUILD_DIR)/suns.o
 
 .PHONY: all clean
 
@@ -31,8 +31,11 @@ $(BUILD_DIR):
 $(TARGET): $(OBJS)
 	$(LD) $(LDFLAGS) -o $(TARGET) $(HEADERS) $(OBJS) $(LIBS)
 
-$(BUILD_DIR)/asm.o: $(ASM_SRC) $(BUILD_DIR) 
-	$(AS) $(ASFLAGS) -o $(BUILD_DIR)/asm.o $(ASM_SRC)
+$(BUILD_DIR)/step.o: $(ASM_SRC) $(BUILD_DIR) 
+	$(AS) $(ASFLAGS) -o $(BUILD_DIR)/step.o $(SRC_DIR)/asm/main.s
+
+$(BUILD_DIR)/suns.o: $(ASM_SRC) $(BUILD_DIR) 
+	$(AS) $(ASFLAGS) -o $(BUILD_DIR)/suns.o $(SRC_DIR)/asm/generate_sun.s
 
 $(BUILD_DIR)/main.o: $(CPP_SRC) $(BUILD_DIR) 
 	$(CC) $(CFLAGS) -c $(CPP_SRC) -o $(BUILD_DIR)/main.o 

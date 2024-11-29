@@ -21,14 +21,20 @@ void display(char* playing_field, chtype* entities) {
                 case '%':
                     ch = entities[EntitiyIndex::Sunflower];
                     break;
-                case '}':
-                    ch = entities[EntitiyIndex::Peashooter];
+                case '?':
+                    ch = entities[EntitiyIndex::NotReadyPeashooter];
+                    break;
+                case '!':
+                    ch = entities[EntitiyIndex::ReadyPeashooter];
                     break;
                 case '*':
                     ch = entities[EntitiyIndex::Pea];
                     break;
                 case '#':
                     ch = entities[EntitiyIndex::Wallnut];
+                    break;
+                case '|':
+                    ch = entities[EntitiyIndex::DamagedWallnut];
                     break;
                 case '&':
                     ch = entities[EntitiyIndex::SmallZombie];
@@ -42,12 +48,16 @@ void display(char* playing_field, chtype* entities) {
                 case '>':
                     ch = entities[EntitiyIndex::Lawnmower];
                     break;
+                case '~':
+                    ch = entities[EntitiyIndex::ReadyLawnmowerBase];
+                    break;
                 case '=':
-                    ch = entities[EntitiyIndex::LawnmowerBase];
+                    ch = entities[EntitiyIndex::NotReadyLawnmowerBase];
                     break;
             }
             addch(ch);
-            col += 1 + (ch != entities[EntitiyIndex::LawnmowerBase]);
+            col += 1 + (ch != entities[EntitiyIndex::ReadyLawnmowerBase] &&
+                        ch != entities[EntitiyIndex::NotReadyLawnmowerBase]);
         }
         addch('\n');
         row += 1;

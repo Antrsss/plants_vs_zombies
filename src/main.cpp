@@ -6,8 +6,8 @@
 extern "C" int step(char*);
 
 char* playing_field = new char[WIDTH * HEIGHT];
-chtype* entities =
-    new chtype[]{ '.', '%', '?', '*', '#', '&', '$', '@', '>', '=' };
+chtype* entities = new chtype[]{ '.', '%', '?', '!', '*', '#', '|',
+                                 '&', '$', '@', '>', '~', '=' };
 
 // 01 2 3 4 5 6 7 8 9 10
 // => . . . . . @ . . .
@@ -40,7 +40,9 @@ int main() {
 
     while (game_on) {
         display(playing_field, entities);
-        fake_step(playing_field);
+        if (step(playing_field) == -1) {
+            game_on = false;
+        }
         getch();
     }
 
@@ -52,11 +54,11 @@ void init_playing_field(char* playing_field) {
     for (int i = 0; i < WIDTH * HEIGHT; ++i) {
         playing_field[i] = '.';
     }
-    playing_field[0] = '=';
-    playing_field[11] = '=';
-    playing_field[22] = '=';
-    playing_field[33] = '=';
-    playing_field[44] = '=';
+    playing_field[0] = '~';
+    playing_field[11] = '~';
+    playing_field[22] = '~';
+    playing_field[33] = '~';
+    playing_field[44] = '~';
     playing_field[1] = '>';
     playing_field[12] = '>';
     playing_field[23] = '>';
