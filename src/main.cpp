@@ -1,4 +1,5 @@
 #include <ncurses.h>
+#include <array>
 #include "config.h"
 #include "display.h"
 #include "entities.h"
@@ -6,9 +7,11 @@
 extern "C" int step(char*);
 extern "C" int update_suns(char*, int);
 
-char* playing_field = new char[WIDTH * HEIGHT];
-chtype* entities = new chtype[]{ '.', '%', '?', '!', '*', '#', '|',
-                                 '&', '$', '@', '>', '~', '=' };
+char* playing_field = new char[WIDTH * HEIGHT + 1]{
+    "~>%?*.$....~>%?*.#*.*.~>%?*.#*.*.~>%?*.*&$$.~>%?*.*.*.."
+};
+std::array<const chtype, 13> entities{ '.', '%', '?', '!', '*', '#', '|',
+                                       '&', '$', '@', '>', '~', '=' };
 
 // 01 2 3 4 5 6 7 8 9 10
 // ~> . . . . . @ . . .
@@ -39,8 +42,8 @@ int main() {
             game_on = false;
             break;
     }
-    init_playing_field(playing_field);
-    init_entities(entities);
+    /*init_playing_field(playing_field);*/
+    /*init_entities(entities);*/
     int suns = 100;
     int game_result = 1;
     int cycles = 0;
@@ -160,6 +163,14 @@ int delete_plant(char* playing_field) {
         case '?':
             playing_field[coords] = '.';
             break;
+    }
+    return 1;
+}
+
+int create_plant(char* playing_field) {
+    int coords = read_coords();
+    if (coords < 0) {
+        return -1;
     }
     return 1;
 }
