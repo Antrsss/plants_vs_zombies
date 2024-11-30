@@ -1,15 +1,60 @@
 #include "display.h"
 #include <ncurses.h>
+#include <cmath>
 #include <string>
-#include <vector>
 #include "config.h"
 #include "entities.h"
 
-void display_game_screen() {}
+void update_game_screen(char* playing_field, chtype* entities, int suns) {
+    int start_row = 0, start_col = 0;
+    getmaxyx(stdscr, start_row, start_col);
+    start_col /= 2;
+    start_row /= 2;
+    start_col -= 10;
+    start_row -= 5;
+    std::string suns_msg = "Suns: " + std::to_string(suns);
+    move(start_row - 2, start_col);
+    addstr(suns_msg.c_str());
+    refresh();
+
+    getmaxyx(stdscr, start_row, start_col);
+    start_col = 0;
+    start_row /= 2;
+    move(start_row, start_col);
+    addstr("Sunflower (%): 50 suns");
+    move(++start_row, start_col);
+    addstr("Peashooter(!/?): 100 suns");
+    move(++start_row, start_col);
+    addstr("Wallnut(#): 75 suns");
+    display(playing_field, entities);
+}
 
 void display(char* playing_field, chtype* entities) {
-    int row = 10, col = 10;
+    int start_row = 0, start_col = 0;
+    getmaxyx(stdscr, start_row, start_col);
+    start_col /= 2;
+    start_row /= 2;
+    start_col -= 10;
+    start_row -= 5;
+    int row = start_row, col = start_col;
+    row -= 1;
+    col += 3;
+    for (int i = 0; i < WIDTH - 2; ++i) {
+        move(row, col);
+        addch('A' + i);
+        col += 2;
+    }
 
+    row = start_row;
+    col = start_col - 2;
+    for (int i = 0; i < HEIGHT; ++i) {
+        move(row, col);
+        addch('1' + i);
+        row += 1;
+    }
+
+    row = start_row;
+    col = start_col;
     for (int i = 0; i < HEIGHT; ++i) {
         for (int j = 0; j < WIDTH; ++j) {
             move(row, col);
@@ -61,7 +106,7 @@ void display(char* playing_field, chtype* entities) {
         }
         addch('\n');
         row += 1;
-        col = 0;
+        col = start_col;
     }
     refresh();
 }
@@ -140,10 +185,81 @@ int menu() {
 
 void print_logo(const std::vector<std::string>& logo) {
     int x, y;
-    x = 60;
-    y = 15;
+    getmaxyx(stdscr, y, x);
+    x /= 2;
+    y /= 2;
+    y -= 3 * logo.size();
+    x -= logo[0].size() / 2;
     for (const auto& line : logo) {
         mvprintw(y++, x, "%s", line.c_str());
     }
     refresh();
+}
+
+int end_screen(int result) {
+    clear();
+    int height, width;
+    getmaxyx(stdscr, height, width);
+    std::vector<std::string> logo_win = {
+        // clang-format off
+        "__      __ ___  _  _ ",
+        "\\ \\    / /|_ _|| \\| |",
+        " \\ \\/\\/ /  | | | .  |",
+        "  \\_/\\_/  |___||_|\\_|",
+        // clang-format on
+    };
+    std::vector<std::string> logo_loss = {
+        // clang-format off
+        " _      ___   ___  ___ ",
+        "| |    / _ \\ / __|/ __|",
+        "| |__ | (_) |\\__ \\\\__ \\",
+        "|____| \\___/ |___/|___/"
+        // clang-format on
+    };
+    int startx = (width - 40) / 2;
+    int starty = (height - 10) / 2;
+    WINDOW* menu_win = newwin(10, 40, starty, startx);
+    keypad(menu_win, TRUE);
+    refresh();
+    std::vector<std::string> choices = { "New game", "Exit" };
+    int n_choices = choices.size();
+    int highlight = 1;
+    int choice = -1;
+    int c;
+    if (result == 1) {
+        print_logo(logo_win);
+    } else {
+        choices[0] = "Retry";
+        print_logo(logo_loss);
+    }
+    print_menu(menu_win, highlight, choices, n_choices);
+    while (true) {
+        c = wgetch(menu_win);
+        switch (c) {
+            case KEY_UP:
+                if (highlight == 1) {
+                    highlight = n_choices;
+                } else {
+                    --highlight;
+                }
+                break;
+            case KEY_DOWN:
+                if (highlight == n_choices) {
+                    highlight = 1;
+                } else {
+                    ++highlight;
+                }
+                break;
+            case 10:
+                choice = highlight;
+                break;
+            default:
+                break;
+        }
+        print_menu(menu_win, highlight, choices, n_choices);
+        if (choice != -1) {
+            break;
+        }
+    }
+    return choice;
 }
