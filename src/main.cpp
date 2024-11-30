@@ -1,4 +1,3 @@
-#include <bits/types/cookie_io_functions_t.h>
 #include <ncurses.h>
 #include "config.h"
 #include "display.h"
@@ -194,4 +193,20 @@ void init_playing_field(char* playing_field) {
     playing_field[2 * WIDTH + 3] = '!';
     playing_field[3 * WIDTH + 3] = '!';
     playing_field[4 * WIDTH + 3] = '!';
+}
+
+void fake_step(char* playing_field) {
+    for (int i = 0; i < HEIGHT; ++i) {
+        for (int j = 2; j < WIDTH; ++j) {
+            int char_index = i * WIDTH + j;
+            char cur_ch = playing_field[char_index];
+            if (j == 2) {
+                continue;
+            }
+            if (cur_ch == '&' || cur_ch == '@' || cur_ch == '$') {
+                playing_field[char_index - 1] = cur_ch;
+                playing_field[char_index] = '.';
+            }
+        }
+    }
 }

@@ -12,15 +12,15 @@ step:
     movq $0, %rcx
     movq %rdi, %rsi #сохраняем, чтобы двигать зомби
 
-lawnowers:             
+lawnowers:         
+    cmpq $5, %rcx #условие окончанмя цикла
+    je zombies
+
     cmpb $'~', (%rsi) 
     jnz run_lawnower #т.е. не равны <=> зомби уже доходил до газонокосилки
         
     addq $11, %rsi
-
     incq %rcx
-    cmpq $5, %rcx #условие окончанмя цикла
-    je zombies
 
     jmp lawnowers
 
@@ -144,14 +144,24 @@ later:
     decq %rsi
     movb %al, (%rsi)
 
-    incq %rsi
+    addq $2, %rsi
     jmp zombies_step
 
 change_to_1:
     decq %rsi
+    decq %rcx
+
+    cmpb $'~', (%rsi)
+    je change
+
+    addq $5, %rsi
+    addq $3, %rcx
+    jmp zombies_step
+
+change:
     movb $'=', (%rsi)  
-    addq $3, %rsi
-    incq %rcx
+    addq $5, %rsi
+    addq $3, %rcx
 
     jmp zombies_step
 
@@ -296,7 +306,7 @@ last_bullet_cell:
 generate_zombie:
     rdtsc
     movq $0, %rdx
-    movq $6, %rcx
+    movq $7, %rcx
     div %rcx
 
     movq %rdx, %rbx #сгенерированное случайное число - номер грядки, в которой появится зомби
