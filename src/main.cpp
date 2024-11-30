@@ -1,5 +1,6 @@
 #include <ncurses.h>
 #include <array>
+#include <cmath>
 #include "config.h"
 #include "display.h"
 #include "entities.h"
@@ -22,7 +23,7 @@ std::array<const chtype, 13> entities{ '.', '%', '?', '!', '*', '#', '|',
 // ~> . . . . . . . . .
 
 void init_playing_field(char*);
-int take_input(char*);
+int take_input(char*, int);
 int create_plant(char*);
 int delete_plant(char*);
 int read_coords();
@@ -50,10 +51,11 @@ int main() {
 
     while (game_on) {
         suns = update_suns(playing_field, suns);
-        update_game_screen(playing_field, entities, suns);
         if (step(playing_field) == -1) {
             game_on = false;
             game_result = -1;
+        } else {
+            update_game_screen(playing_field, entities, suns);
         }
         ++cycles;
         if (cycles >= 200) {
@@ -73,7 +75,7 @@ int main() {
                     break;
             }
         } else {
-            if (take_input(playing_field) == -1) {
+            if (take_input(playing_field, suns) == -1) {
                 game_on = false;
             }
         }
@@ -83,9 +85,10 @@ int main() {
     return 0;
 }
 
-int take_input(char* playing_field) {
+int take_input(char* playing_field, int suns) {
     int result = 0;
     int y, x;
+lp:
     getyx(stdscr, y, x);
     move(y + 4, 0);
     printw("Enter your action: ");
@@ -94,11 +97,13 @@ int take_input(char* playing_field) {
     while ((ch = getch()) != 'n') {
         if (ch == 'd') {
             if (delete_plant(playing_field) > 0) {
-                break;
+                update_game_screen(playing_field, entities, suns);
+                goto lp;
             }
         } else if (ch == 'p') {
             if (create_plant(playing_field) > 0) {
-                break;
+                update_game_screen(playing_field, entities, suns);
+                goto lp;
             }
         } else if (ch == 'q') {
             return -1;
@@ -119,8 +124,14 @@ int take_input(char* playing_field) {
 }
 
 int read_coords() {
+    echo();
     int y, x;
     getyx(stdscr, y, x);
+    move(y, 0);
+    printw(
+        "Please enter a letter (A-I) followed by a "
+        "number (1-5): ");
+    refresh();
     char letter;
     int number;
     bool valid_input = false;
@@ -142,7 +153,8 @@ int read_coords() {
     move(y, 0);
     clrtoeol();
     refresh();
-    return number * WIDTH + (letter - 'A' + 2);
+    noecho();
+    return (number - 1) * WIDTH + (letter - 'A' + 2);
 }
 
 int delete_plant(char* playing_field) {
