@@ -5,7 +5,8 @@
 #include "config.h"
 #include "entities.h"
 
-void update_game_screen(char* playing_field, chtype* entities, int suns) {
+void update_game_screen(char* playing_field,
+                        std::array<const chtype, 13> entities, int suns) {
     int start_row = 0, start_col = 0;
     getmaxyx(stdscr, start_row, start_col);
     start_col /= 2;
@@ -29,7 +30,7 @@ void update_game_screen(char* playing_field, chtype* entities, int suns) {
     display(playing_field, entities);
 }
 
-void display(char* playing_field, chtype* entities) {
+void display(char* playing_field, std::array<const chtype, 13> entities) {
     int start_row = 0, start_col = 0;
     getmaxyx(stdscr, start_row, start_col);
     start_col /= 2;
@@ -101,6 +102,7 @@ void display(char* playing_field, chtype* entities) {
                     break;
             }
             addch(ch);
+            refresh();
             col += 1 + (ch != entities[EntitiyIndex::ReadyLawnmowerBase] &&
                         ch != entities[EntitiyIndex::NotReadyLawnmowerBase]);
         }
