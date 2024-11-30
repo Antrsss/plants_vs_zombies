@@ -64,8 +64,15 @@ void init_playing_field(char* playing_field) {
     playing_field[23] = '>';
     playing_field[34] = '>';
     playing_field[45] = '>';
-    playing_field[0 * 8 + 7] = '@';
-    playing_field[1 * 8 + 6] = '#';
+    playing_field[0 * 11 + 3] = '?';
+    playing_field[0 * 11 + 6] = '$';
+    playing_field[1 * 11 + 3] = '!';
+    playing_field[2 * 11 + 3] = '!';
+    playing_field[3 * 11 + 3] = '!';
+    playing_field[3 * 11 + 4] = '!';
+    playing_field[0 * 11 + 9] = '&';
+    playing_field[1 * 11 + 3] = '@';
+    playing_field[4 * 11 + 2] = '@';
 }
 
 void fake_step(char* playing_field) {
