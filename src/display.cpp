@@ -14,6 +14,8 @@ void update_game_screen(char* playing_field,
     start_col -= 10;
     start_row -= 5;
     std::string suns_msg = "Suns: " + std::to_string(suns);
+    move(start_row - 2, 0);
+    clrtoeol();
     move(start_row - 2, start_col);
     addstr(suns_msg.c_str());
     refresh();

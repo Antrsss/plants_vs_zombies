@@ -9,10 +9,10 @@ extern "C" int step(char*);
 extern "C" int update_suns(char*, int);
 
 char* playing_field = new char[WIDTH * HEIGHT + 1]{
-    "~>%?*.$....~>%?*.#*.*.~>%?*.#*.*.~>%?*.*&$$.~>%?*.*.*.."
+    "~>.........~>.........~>.........~>.........~>........."
 };
-std::array<const chtype, 13> entities{ '.', '%', '?', '!', '*', '#', '|',
-                                       '&', '$', '@', '>', '~', '=' };
+/*std::array<const chtype, 13> entities{ '.', '%', '?', '!', '*', '#', '|',*/
+/*                                       '&', '$', '@', '>', '~', '=' };*/
 
 // 01 2 3 4 5 6 7 8 9 10
 // ~> . . . . . @ . . .
@@ -23,8 +23,8 @@ std::array<const chtype, 13> entities{ '.', '%', '?', '!', '*', '#', '|',
 // ~> . . . . . . . . .
 
 void init_playing_field(char*);
-int take_input(char*, int);
-int create_plant(char*);
+int take_input(char*, std::array<const chtype, 13>, int);
+int create_plant(char*, int&);
 int delete_plant(char*);
 int read_coords();
 
@@ -37,7 +37,6 @@ int main() {
     clear();
 
     bool game_on = true;
-
     switch (choice) {
         case 2:
             game_on = false;
@@ -45,6 +44,7 @@ int main() {
     }
     /*init_playing_field(playing_field);*/
     /*init_entities(entities);*/
+    auto entities = init_entities();
     int suns = 100;
     int game_result = 1;
     int cycles = 0;
@@ -75,7 +75,7 @@ int main() {
                     break;
             }
         } else {
-            if (take_input(playing_field, suns) == -1) {
+            if (take_input(playing_field, entities, suns) == -1) {
                 game_on = false;
             }
         }
@@ -85,7 +85,8 @@ int main() {
     return 0;
 }
 
-int take_input(char* playing_field, int suns) {
+int take_input(char* playing_field, std::array<const chtype, 13> entities,
+               int suns) {
     int result = 0;
     int y, x;
 lp:
@@ -101,7 +102,7 @@ lp:
                 goto lp;
             }
         } else if (ch == 'p') {
-            if (create_plant(playing_field) > 0) {
+            if (create_plant(playing_field, suns) > 0) {
                 update_game_screen(playing_field, entities, suns);
                 goto lp;
             }
@@ -179,11 +180,42 @@ int delete_plant(char* playing_field) {
     return 1;
 }
 
-int create_plant(char* playing_field) {
+int create_plant(char* playing_field, int& suns) {
     int coords = read_coords();
+    int y, x;
+    getyx(stdscr, y, x);
+    move(y, 0);
+    printw("Please enter a letter for a plant (s, w, p) : ");
+    refresh();
     if (coords < 0) {
         return -1;
     }
+    int ch;
+    echo();
+    ch = getch();
+    switch (ch) {
+        case 's':
+            if (playing_field[coords] == '.' && suns >= 50) {
+                playing_field[coords] = '%';
+                suns -= 50;
+            }
+            break;
+        case 'w':
+            if (playing_field[coords] == '.' && suns >= 75) {
+                playing_field[coords] = '#';
+                suns -= 75;
+            }
+            break;
+        case 'p':
+            if (playing_field[coords] == '.' && suns >= 100) {
+                playing_field[coords] = '!';
+                suns -= 100;
+            }
+            break;
+    }
+    move(y, 0);
+    clrtoeol();
+    noecho();
     return 1;
 }
 

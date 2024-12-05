@@ -1,6 +1,7 @@
 #ifndef ENTITIES
 #define ENTITIES
 
+#include <array>
 #include <cstdint>
 #include "ncurses.h"
 
@@ -20,6 +21,6 @@ enum EntitiyIndex : int8_t {
     NotReadyLawnmowerBase = 12
 };
 
-void init_entities(chtype*);
+std::array<const chtype, 13> init_entities();
 
 #endif  // !ENTITIES
